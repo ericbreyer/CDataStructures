@@ -1,10 +1,9 @@
 #include "./rbtree.h"
+#include "./EBdefs.h"
 #include "./rbnode/rbnode.h"
 
-#include "./EBdefs.h"
-
 void rbtreePrintBookends(struct rbtree *this) {
-    printf("---------bh:%d rp: %s---------\n", (this->root ? this->root->vtable->bh(this->root) : 0), (this->root ? (this->root->vtable->rp(this->root) ? "✅" : "❌") : "✅"));
+    printf("---------bh:%d rp: %s---------\n", (this->root ? this->root->vtable->bh(this->root) : 0), (this->root ? (this->root->vtable->rp(this->root) ? "✅" : "❌ ") : "✅"));
 }
 
 void rbtree_print(struct rbtree *this) {
