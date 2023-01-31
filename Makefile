@@ -1,5 +1,5 @@
 HEADERS = ../rbtree/rbtree.h
-OBJECTS = ./test/test.o ./rbtree/rbtree.o
+OBJECTS = ./test/test.o ./rbtree/rbtree.o ./rbtree/rbnode/rbnode.o
 
 CC=gcc 
 CFLAGS= -Wall -Wextra
@@ -14,7 +14,7 @@ default: test
 test: $(OBJECTS)
 	$(CC) $(OBJECTS) -o ./test/bin/$@.exe $(CFLAGS)
 
-run:
+run: test
 	./test/bin/test.exe
 
 clean:
