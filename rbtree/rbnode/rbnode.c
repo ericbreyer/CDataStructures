@@ -1,6 +1,6 @@
 #include "./rbnode.h"
 
-#include "../EBdefs.h"
+#include "../../EBdefs.h"
 
 void rbnode_static_doubleBlackFixup(struct rbnode *dbnode, struct rbnode *parent);
 
@@ -252,7 +252,7 @@ char *rbnode_toString(struct rbnode *this) {
         color = "⬛";
         break;
     }
-    char *ss = malloc(sizeof *ss * 50);
+    char *ss = calloc(50, sizeof *ss);
     sprintf(ss, "%s %d->%d", color, this->key, this->value);
     return ss;
 }
@@ -261,20 +261,22 @@ void rbnode_setRoot(struct rbnode *this, struct rbnode *root) {
     *(this->root) = root;
 }
 
-void rbnode_printTree(struct rbnode *this, int depth) {
-    printf(" ");
+void rbnode_printTree(struct rbnode *this, int depth, FILE * out) {
+    fprintf(out, " ");
     for (int i = 0; i < depth; i++) {
-        printf("│ ");
+        fprintf(out, "│ ");
     }
-    printf("\b%s\n", this->vtable->toString(this));
+    char *s = this->vtable->toString(this);
+    fprintf(out, "%s\n", s);
+    free(s);
     if (this->r) {
-        this->r->vtable->printTree(this->r, depth + 1);
+        this->r->vtable->printTree(this->r, depth + 1, out);
     }
     if (this->l)
-        this->l->vtable->printTree(this->l, depth + 1);
+        this->l->vtable->printTree(this->l, depth + 1, out);
 }
 
-int rbnode_getKeys(struct rbnode *this, int *keys) {
+int rbnode_getKeys(struct rbnode *this, int **keys) {
 
     int numRKeys = 0;
     int numLKeys = 0;
@@ -282,28 +284,33 @@ int rbnode_getKeys(struct rbnode *this, int *keys) {
     int *lkeys = nullptr;
 
     if (this->r) {
-        numRKeys = this->r->vtable->getKeys(this, rkeys);
+        numRKeys = this->r->vtable->getKeys(this->r, &rkeys);
     }
     if (this->l) {
-        numLKeys = this->l->vtable->getKeys(this, lkeys);
+        numLKeys = this->l->vtable->getKeys(this->l, &lkeys);
     }
 
-    keys = malloc(sizeof(int) * numRKeys + numLKeys + 1);
-    *keys = this->key;
+    *keys = calloc((numRKeys + numLKeys + 1), sizeof(int));
+    if (!(*keys)) {
+        assert(false);
+    }
+    **keys = this->key;
     if (rkeys) {
-        memcpy(keys + 1, rkeys, numRKeys);
+        memcpy((*keys) + 1, rkeys, sizeof *rkeys * numRKeys);
+        free(rkeys);
     }
     if (lkeys) {
-        memcpy(keys + 1 + numRKeys, lkeys, numLKeys);
+        memcpy((*keys) + 1 + numRKeys, lkeys, sizeof *lkeys * numLKeys);
+        free(lkeys);
     }
-    free(rkeys);
-    free(lkeys);
+
     return numRKeys + numLKeys + 1;
 }
 
 struct rbnode *rbnode_copy(struct rbnode *this, struct rbnode *parent) {
     // make a copy of this node
     struct rbnode *newme = construct_rbnode(this->key, this->value, parent, this->root);
+    assert(newme);
     newme->c = this->c;
     // copy its subtrees, if they exist
     struct rbnode *newl = this->l ? this->l->vtable->copy(this->l, newme) : nullptr;
@@ -320,7 +327,7 @@ int rbnode_contains(struct rbnode *this, int key) {
         return true;
     }
     // see if we need to look in the left or right subtree
-    struct rbnode **recurseOn = (this->vtable->compare(this, key) >= 0) ? &this->l : &this->r;
+    struct rbnode **recurseOn = (this->vtable->compare(this, key) >= 0) ? &(this->l) : &(this->r);
     // if that child dosen't exist, the node isn't in the tree,
     // otherwise, see if the subtree contains it
     if (!*recurseOn) {
@@ -339,7 +346,7 @@ int rbnode_getValue(struct rbnode *this, int key) {
     // if that child dosen't exist, the node isn't in the tree,
     // otherwise, get the value of the node in the subtree
     if (!*recurseOn) {
-        return nullptr;
+        return 0;
     }
     return (*recurseOn)->vtable->getValue((*recurseOn), key);
 }
@@ -381,11 +388,12 @@ int rbnode_insert(struct rbnode *this, int key, int value) {
     if (this->vtable->compare(this, key) == 0)
         return false;
     // see if we need to look in the left or right subtree
-    struct rbnode **recurseOn = (this->vtable->compare(this, key) >= 0) ? &this->l : &this->r;
+    struct rbnode **recurseOn = (this->vtable->compare(this, key) >= 0) ? &(this->l) : &(this->r);
     // if that child dosen't exist, the node isn't in the tree, so insert it
     // otherwise, insert the node in the subtree
     if (!*recurseOn) {
         *recurseOn = construct_rbnode(key, value, this, this->root);
+        assert(*recurseOn);
         (*recurseOn)->vtable->insertFixup((*recurseOn));
         return true;
     } else {
@@ -479,7 +487,7 @@ struct rbnode_VTABLE_s rbnode_VTABLE = {
 };
 
 struct rbnode *construct_rbnode(int key, int value, struct rbnode *parent, struct rbnode **r) {
-    struct rbnode *node = malloc(sizeof *node);
+    struct rbnode *node = calloc(1, sizeof *node);
     node->l = nullptr;
     node->r = nullptr;
 
@@ -492,6 +500,7 @@ struct rbnode *construct_rbnode(int key, int value, struct rbnode *parent, struc
     }
 
     node->vtable = &rbnode_VTABLE;
+    // printf("%p\n", &rbnode_VTABLE);
 
     return node;
 };

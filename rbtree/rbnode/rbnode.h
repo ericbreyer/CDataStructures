@@ -178,9 +178,9 @@ struct rbnode_VTABLE_s {
      *
      * @param[in] depth the depth of this node
      */
-    void (*printTree)(struct rbnode *this, int depth);
+    void (*printTree)(struct rbnode *this, int depth, FILE * out);
 
-    int (*getKeys)(struct rbnode *this, int *keys);
+    int (*getKeys)(struct rbnode *this, int **keys);
     /**
      * @brief makes a copy of the tree rooted at this node
      *

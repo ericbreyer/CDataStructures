@@ -1,21 +1,21 @@
 #include "./rbtree.h"
-#include "./EBdefs.h"
+#include "../EBdefs.h"
 #include "./rbnode/rbnode.h"
 
-void rbtreePrintBookends(struct rbtree *this) {
-    printf("---------bh:%d rp: %s---------\n", (this->root ? this->root->vtable->bh(this->root) : 0), (this->root ? (this->root->vtable->rp(this->root) ? "✅" : "❌ ") : "✅"));
+void rbtreePrintBookends(struct rbtree *this, FILE * out) {
+    fprintf(out, "---------bh:%d rp: %s---------\n", (this->root ? this->root->vtable->bh(this->root) : 0), (this->root ? (this->root->vtable->rp(this->root) ? "✅" : "❌ ") : "✅"));
 }
 
-void rbtree_print(struct rbtree *this) {
-    rbtreePrintBookends(this);
+void rbtree_print(struct rbtree *this, FILE * out) {
+    rbtreePrintBookends(this, out);
     if (!this->root) {
         return;
     }
-    this->root->vtable->printTree(this->root, 0);
-    rbtreePrintBookends(this);
+    this->root->vtable->printTree(this->root, 0, out);
+    rbtreePrintBookends(this, out);
 }
 
-int rbtree_getKeys(struct rbtree *this, int *keys) {
+int rbtree_getKeys(struct rbtree *this, int **keys) {
     if (!this->root) {
         return 0;
     }
@@ -100,7 +100,7 @@ void destroy_rbtree(struct rbtree *this) {
 }
 
 struct rbtree *construct_rbtree() {
-    struct rbtree *new = malloc(sizeof *new);
+    struct rbtree *new = calloc(1, sizeof *new);
     new->root = nullptr;
 
     new->print = rbtree_print;

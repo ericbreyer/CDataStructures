@@ -1,5 +1,5 @@
 HEADERS = ../*.h  ../*/*.h ../*/*/*.h
-OBJECTS = ./test/test.o ./rbtree/rbtree.o ./rbtree/rbnode/rbnode.o ./llist/llist.o
+OBJECTS = ./main.o ./bloom_filter.o
 
 CC=gcc 
 CFLAGS= -Wall -Wextra -g
@@ -12,14 +12,14 @@ default: test
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 test: $(OBJECTS)
-	$(CC) $(OBJECTS) -o ./test/bin/$@.exe $(CFLAGS)
+	$(CC) $(OBJECTS) -o ./bin/$@.exe $(CFLAGS)
 
 run: test
-	./test/bin/test.exe
+	./bin/test.exe
 
 debug: test
-	lldb ./test/bin/test.exe
+	lldb ./bin/test.exe
 
 clean:
 	-rm -f $(OBJECTS)
-	-rm -f ./test/bin/test.exe
+	-rm -f ./bin/test.exe

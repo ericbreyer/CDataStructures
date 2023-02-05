@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #pragma once
 #define STRICT_CHECK
 #ifndef STRICT_CHECK
@@ -22,9 +21,9 @@ struct rbtree {
     /**
      * @brief pretty print a representation of the rbtree
      */
-    void (*print)(struct rbtree *this);
+    void (*print)(struct rbtree *this, FILE * out);
 
-    int (*getKeys)(struct rbtree *this, int *keys);
+    int (*getKeys)(struct rbtree *this, int **keys);
 
     /**
      * @brief recursively deletes every node to clear the tree, this tree object still lives
