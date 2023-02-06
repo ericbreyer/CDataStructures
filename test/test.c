@@ -1,6 +1,6 @@
 #include "../linked_hash_table/linked_hash_table.h"
-#include "../llist/llist.h"
-#include "../llist/llnode/llnode.h"
+#include "../linked_list/linked_list.h"
+#include "../linked_list/linked_list_node/linked_list_node.h"
 #include "../rbtree/rbtree.h"
 // #include "../bloom/bloom.h"
 #include "ref.h"
@@ -228,7 +228,7 @@ void rbtree_test_remove() {
 }
 
 void llist_test_copy() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -238,18 +238,18 @@ void llist_test_copy() {
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
         if (actual[i] != expected[i]) {
-            fprintf(stderr, "%-45s", "❌ llist Copy Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            fprintf(stderr, "%-45s", "❌ linked_list Copy Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             destroy_llist(list);
             free(list);
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist Copy Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list Copy Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_toArray() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -258,132 +258,132 @@ void llist_test_toArray() {
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
         if (actual[i] != expected[i]) {
-            fprintf(stderr, "%-45s", "❌ llist To Array Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            fprintf(stderr, "%-45s", "❌ linked_list To Array Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             destroy_llist(list);
             free(list);
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist To Array Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list To Array Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_length() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     int actual = list->length(list);
     if (actual != 10) {
-        fprintf(stderr, "%-45s", "❌ llist length Failed expected: 10, got: %d ", actual);
+        fprintf(stderr, "%-45s", "❌ linked_list length Failed expected: 10, got: %d ", actual);
         destroy_llist(list);
         free(list);
         return;
     }
 
-    fprintf(stdout, "%-45s", "✅ llist length Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list length Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_clear() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     list->clear(list);
     int actual = list->length(list);
     if (actual != 0) {
-        fprintf(stderr, "%-45s", "❌ llist clear Failed ");
+        fprintf(stderr, "%-45s", "❌ linked_list clear Failed ");
         destroy_llist(list);
         free(list);
         return;
     }
-    fprintf(stdout, "%-45s", "✅ llist clear Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list clear Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_contains() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     int actual = list->contains(list, 5);
     if (actual != true) {
-        fprintf(stderr, "%-45s", "❌ llist contains Failed: expected 5 in list ");
+        fprintf(stderr, "%-45s", "❌ linked_list contains Failed: expected 5 in list ");
         destroy_llist(list);
         free(list);
         return;
     }
     actual = list->contains(list, 50);
     if (actual != false) {
-        fprintf(stderr, "%-45s", "❌ llist contains Failed: expected 50 not in map ");
+        fprintf(stderr, "%-45s", "❌ linked_list contains Failed: expected 50 not in map ");
         destroy_llist(list);
         free(list);
         return;
     }
-    fprintf(stdout, "%-45s", "✅ llist contains Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list contains Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_find() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     list = list->copy(list);
     int actual = list->find(list, 5);
     if (actual != 5) {
-        fprintf(stderr, "%-45s", "❌ llist find Failed: expected 5 at idx 5 got idx %d ", actual);
+        fprintf(stderr, "%-45s", "❌ linked_list find Failed: expected 5 at idx 5 got idx %d ", actual);
         destroy_llist(list);
         free(list);
         return;
     }
     actual = list->find(list, 50);
     if (actual != NOT_FOUND) {
-        fprintf(stderr, "%-45s", "❌ llist find Failed: expected 50 not in list got 50 at idx %d ", (int)actual);
+        fprintf(stderr, "%-45s", "❌ linked_list find Failed: expected 50 not in list got 50 at idx %d ", (int)actual);
         destroy_llist(list);
         free(list);
         return;
     }
-    fprintf(stdout, "%-45s", "✅ llist find Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list find Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_get() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     int actual = list->get(list, 5);
     if (actual != 5) {
-        fprintf(stderr, "%-45s", "❌ llist get Failed: expected 5 at idx 5 got %d ", (int)actual);
+        fprintf(stderr, "%-45s", "❌ linked_list get Failed: expected 5 at idx 5 got %d ", (int)actual);
         destroy_llist(list);
         free(list);
         return;
     }
-    fprintf(stdout, "%-45s", "✅ llist get Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list get Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_set() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
     list->set(list, 5, 10);
     int actual = list->get(list, 5);
     if (actual != 10) {
-        fprintf(stderr, "%-45s", "❌ llist set Failed: expected 10 at idx 5 got %d ", (int)actual);
+        fprintf(stderr, "%-45s", "❌ linked_list set Failed: expected 10 at idx 5 got %d ", (int)actual);
         destroy_llist(list);
         free(list);
         return;
     }
-    fprintf(stdout, "%-45s", "✅ llist set Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list set Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_append() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -394,7 +394,7 @@ void llist_test_append() {
     for (int i = 0; i < list->length(list); ++i) {
         if ((int)actual[i] != expected[i]) {
             char *t = malloc(sizeof *t * 100);
-            sprintf("❌ llist append Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            sprintf("❌ linked_list append Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             fprintf(stderr, "%-45s", t);
             free(t);
             destroy_llist(list);
@@ -402,12 +402,12 @@ void llist_test_append() {
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist append Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list append Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_prepend() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -418,7 +418,7 @@ void llist_test_prepend() {
     for (int i = 0; i < list->length(list); ++i) {
         if ((int)actual[i] != expected[i]) {
             char *t = malloc(sizeof *t * 100);
-            sprintf(t, "❌ llist prepend Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            sprintf(t, "❌ linked_list prepend Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             fprintf(stderr, "%-45s", t);
             free(t);
             destroy_llist(list);
@@ -426,12 +426,12 @@ void llist_test_prepend() {
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist prepend Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list prepend Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_insert() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -442,7 +442,7 @@ void llist_test_insert() {
     for (int i = 0; i < list->length(list); ++i) {
         if ((int)actual[i] != expected[i]) {
             char *t = malloc(sizeof *t * 100);
-            sprintf(t, "❌ llist insert Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            sprintf(t, "❌ linked_list insert Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             fprintf(stderr, "%-45s", t);
             free(t);
             destroy_llist(list);
@@ -450,12 +450,12 @@ void llist_test_insert() {
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist insert Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list insert Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_remove() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -466,7 +466,7 @@ void llist_test_remove() {
     for (int i = 0; i < list->length(list); ++i) {
         if ((int)actual[i] != expected[i]) {
             char *t = malloc(sizeof *t * 100);
-            sprintf(t, "❌ llist remove Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
+            sprintf(t, "❌ linked_list remove Failed for original at idx %d, expected: %d, got: %d ", i, expected[i], (int)actual[i]);
             fprintf(stderr, "%-45s", t);
             free(t);
             destroy_llist(list);
@@ -474,12 +474,12 @@ void llist_test_remove() {
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist remove Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list remove Passed ");
     destroy_llist(list);
     free(list);
 }
 void llist_test_sort() {
-        struct llist *list = construct_llist();
+        struct linked_list *list = construct_llist();
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
@@ -492,7 +492,7 @@ void llist_test_sort() {
 
     list->toArray(list, &actual);
 
-    struct llist *ref = construct_llist();
+    struct linked_list *ref = construct_llist();
     for (int i = 0; i < 100; ++i) {
         ref->append(ref, i);
     }
@@ -502,7 +502,7 @@ void llist_test_sort() {
     for (int i = 0; i < list->length(list); ++i) {
         if ((int)actual[i] != (int)expected[i]) {
             char *t = malloc(sizeof *t * 100);
-            sprintf(t, "❌ llist sort Failed for original at idx %d, expected: %d, got: %d ", i, (int)expected[i], (int)actual[i]);
+            sprintf(t, "❌ linked_list sort Failed for original at idx %d, expected: %d, got: %d ", i, (int)expected[i], (int)actual[i]);
             fprintf(stderr, "%-45s", t);
             free(t);
             destroy_llist(list);
@@ -510,7 +510,7 @@ void llist_test_sort() {
             return;
         }
     }
-    fprintf(stdout, "%-45s", "✅ llist sort Passed ");
+    fprintf(stdout, "%-45s", "✅ linked_list sort Passed ");
 
     destroy_llist(list);
     free(list);

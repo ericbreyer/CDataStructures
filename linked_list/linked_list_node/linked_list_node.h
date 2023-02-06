@@ -1,15 +1,15 @@
 /**
  * @brief a class that represents a linked list node
  */
-struct llnode {
+struct linked_list_node {
     /**
      * @brief the next node in the list
      */
-    struct llnode *next; // = nullptr;
+    struct linked_list_node *next; // = nullptr;
     /**
      * @brief the prev node in the list
      */
-    struct llnode *prev; // = nullptr;
+    struct linked_list_node *prev; // = nullptr;
     /**
      * @brief the value stored in this node
      */
