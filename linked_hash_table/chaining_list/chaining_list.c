@@ -1,6 +1,6 @@
 #include "chaining_list.h"
 #include <stdio.h>
-struct Node * construct_Node(void * key, void * value) {
+struct Node * construct_Node(generic_t key, generic_t value) {
     struct Node * new = malloc(sizeof *new);
     new->key = key;
     new->value = value;
@@ -8,7 +8,7 @@ struct Node * construct_Node(void * key, void * value) {
     return new;
 }
 
-bool ChainingList_insert(struct ChainingList * this, void *key, void *value) {
+bool ChainingList_insert(struct ChainingList * this, generic_t key, generic_t value) {
     struct Node *prev = NULL;
     struct Node *curr = this->root;
     while (curr != NULL) {
@@ -27,7 +27,7 @@ bool ChainingList_insert(struct ChainingList * this, void *key, void *value) {
     return true;
 }
 
-bool ChainingList_setValue(struct ChainingList * this, void * key, void * value) {
+bool ChainingList_setValue(struct ChainingList * this, generic_t key, generic_t value) {
     struct Node *prev = NULL;
     struct Node *curr = this->root;
     while (curr != NULL) {
@@ -41,7 +41,7 @@ bool ChainingList_setValue(struct ChainingList * this, void * key, void * value)
     return false;
 }
 
-bool ChainingList_remove(struct ChainingList * this, void *key) {
+bool ChainingList_remove(struct ChainingList * this, generic_t key) {
     struct Node *prev = NULL;
     struct Node *curr = this->root;
     while (curr != NULL) {
@@ -64,7 +64,7 @@ bool ChainingList_remove(struct ChainingList * this, void *key) {
     return true;
 }
 
-bool ChainingList_tryGet(struct ChainingList * this, void *key, void **out) {
+bool ChainingList_tryGet(struct ChainingList * this, generic_t key, generic_t *out) {
     struct Node *curr = this->root;
     while (curr != NULL) {
         if (key == curr->key) {
@@ -76,7 +76,7 @@ bool ChainingList_tryGet(struct ChainingList * this, void *key, void **out) {
     return false;
 }
 
-int ChainingList_keys(struct ChainingList * this, void **keys) {
+int ChainingList_keys(struct ChainingList * this, generic_t *keys) {
     struct Node *curr = this->root;
     int numKeys = 0;
     while (curr != NULL) {

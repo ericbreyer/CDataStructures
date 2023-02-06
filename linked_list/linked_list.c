@@ -1,5 +1,4 @@
 #include "./linked_list.h"
-#include "../EBdefs.h"
 #include "./linked_list_node/linked_list_node.h"
 
 void llist_print(struct linked_list *this, FILE * out, void(*printThing)(void*thing, FILE * out)) {
@@ -25,7 +24,7 @@ int llist_length(struct linked_list *this) {
     return len;
 }
 
-int llist_toArray(struct linked_list *this, void ***values) {
+int llist_toArray(struct linked_list *this, generic_t**values) {
     if(!this->head) {
         return 0;
     }
@@ -53,7 +52,7 @@ void llist_clear(struct linked_list *this) {
     this->last = NULL;
 }
 
-bool llist_contains(struct linked_list *this, void * value) {
+bool llist_contains(struct linked_list *this, generic_t value) {
     if(!this->head) {
         return 0;
     }
@@ -67,7 +66,7 @@ bool llist_contains(struct linked_list *this, void * value) {
     return false;
 }
 
-int llist_find(struct linked_list *this, void * value) {
+int llist_find(struct linked_list *this, generic_t value) {
     if(!this->head) {
         return NOT_FOUND;
     }
@@ -81,7 +80,7 @@ int llist_find(struct linked_list *this, void * value) {
     return NOT_FOUND;
  }
 
-void * llist_get(struct linked_list *this, int index) {
+generic_t llist_get(struct linked_list *this, int index) {
     if(!this->head) {
         return 0;
     }
@@ -92,7 +91,7 @@ void * llist_get(struct linked_list *this, int index) {
     return cur->value;
 }
 
-void llist_set(struct linked_list *this, int index, void * value) {
+void llist_set(struct linked_list *this, int index, generic_t value) {
     if(!this->head) {
         return;
     }
@@ -102,7 +101,7 @@ void llist_set(struct linked_list *this, int index, void * value) {
     }
     cur->value = value;
 }
-void llist_append(struct linked_list *this, void * value) {
+void llist_append(struct linked_list *this, generic_t value) {
     if(!this->last) {
         struct linked_list_node * new = malloc(sizeof *new);
         new->next = new->prev = NULL;
@@ -121,7 +120,7 @@ void llist_append(struct linked_list *this, void * value) {
     this->last->next = new;
     this->last = new;
 }
-void llist_prepend(struct linked_list *this, void * value) {
+void llist_prepend(struct linked_list *this, generic_t value) {
     if(!this->head) {
         struct linked_list_node * new = malloc(sizeof *new);
         new->next = new->prev = NULL;
@@ -140,7 +139,7 @@ void llist_prepend(struct linked_list *this, void * value) {
     this->head = new;
 }
 
-void llist_insert(struct linked_list *this, int index, void * value) {
+void llist_insert(struct linked_list *this, int index, generic_t value) {
     if(!this->head) {
         return;
     }

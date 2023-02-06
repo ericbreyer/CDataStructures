@@ -1,12 +1,11 @@
 #include "./rbtree.h"
-#include "../EBdefs.h"
 #include "./rbnode/rbnode.h"
 
 struct rbnode;
 
 struct rbtree {
     struct IMap super;
-    struct rbnode *root; // = nullptr;
+    struct rbnode *root; // = NULL;
 };
 
 
@@ -21,7 +20,7 @@ int rbtree_checkValid(struct rbtree *this) {
     return this->root->vtable->rp(this->root) && (this->root->vtable->bh(this->root) != -1);
 }
 
-void rbtree_print(struct IMap * mapThis, FILE * out,void (*printKey)(void * thing,FILE * out),void (*printVal)(void * thing,FILE * out)) {
+void rbtree_print(struct IMap * mapThis, FILE * out,void (*printKey)(generic_t thing,FILE * out),void (*printVal)(generic_t thing,FILE * out)) {
     struct rbtree * this = (struct rbtree *)mapThis;
     rbtreePrintBookends(this, out);
     if (!this->root) {
@@ -31,7 +30,7 @@ void rbtree_print(struct IMap * mapThis, FILE * out,void (*printKey)(void * thin
     rbtreePrintBookends(this, out);
 }
 
-int rbtree_getKeys(struct IMap *mapThis, void ***keys) {
+int rbtree_getKeys(struct IMap *mapThis, generic_t**keys) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return 0;
@@ -46,7 +45,7 @@ void rbtree_clear(struct IMap *mapThis) {
     }
     destroy_rbnode(this->root);
     free(this->root);
-    this->root = nullptr;
+    this->root = NULL;
 }
 
 struct IMap *rbtree_copy(struct IMap *mapThis) {
@@ -55,11 +54,11 @@ struct IMap *rbtree_copy(struct IMap *mapThis) {
         return construct_rbtree();
     }
     struct rbtree *ret = (struct rbtree *)construct_rbtree();
-    ret->root = this->root->vtable->copy(this->root, nullptr);
+    ret->root = this->root->vtable->copy(this->root, NULL);
     return (struct IMap *)ret;
 }
 
-bool rbtree_contains(struct IMap *mapThis, void * key) {
+bool rbtree_contains(struct IMap *mapThis, generic_t key) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return false;
@@ -67,7 +66,7 @@ bool rbtree_contains(struct IMap *mapThis, void * key) {
     return this->root->vtable->contains(this->root, key);
 };
 
-void* rbtree_getValue(struct IMap *mapThis, void * key) {
+void* rbtree_getValue(struct IMap *mapThis, generic_t key) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return 0;
@@ -75,7 +74,7 @@ void* rbtree_getValue(struct IMap *mapThis, void * key) {
     return this->root->vtable->getValue(this->root, key);
 };
 
-bool rbtree_tryGetValue(struct IMap *mapThis, void * key, void **out) {
+bool rbtree_tryGetValue(struct IMap *mapThis, generic_t key, generic_t*out) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return false;
@@ -83,7 +82,7 @@ bool rbtree_tryGetValue(struct IMap *mapThis, void * key, void **out) {
     return this->root->vtable->tryGetValue(this->root, key, out);
 };
 
-bool rbtree_setValue(struct IMap *mapThis, void * key, void * value) {
+bool rbtree_setValue(struct IMap *mapThis, generic_t key, generic_t value) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return false;
@@ -91,7 +90,7 @@ bool rbtree_setValue(struct IMap *mapThis, void * key, void * value) {
     return this->root->vtable->setValue(this->root, key, value);
 }
 
-bool rbtree_insert(struct IMap *mapThis, void * key, void * value) {
+bool rbtree_insert(struct IMap *mapThis, generic_t key, generic_t value) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         this->root = construct_rbnode(key, value, this->root, &this->root);
@@ -102,7 +101,7 @@ bool rbtree_insert(struct IMap *mapThis, void * key, void * value) {
     return ret;
 };
 
-bool rbtree_remove(struct IMap *mapThis, void * key) {
+bool rbtree_remove(struct IMap *mapThis, generic_t key) {
     struct rbtree * this = (struct rbtree *)mapThis;
     if (!this->root) {
         return false;
@@ -132,7 +131,7 @@ static struct IMap vTable = {
 
 struct IMap *construct_rbtree() {
     struct rbtree *new = calloc(1, sizeof *new);
-    new->root = nullptr;
+    new->root = NULL;
 
     new->super = vTable;
 

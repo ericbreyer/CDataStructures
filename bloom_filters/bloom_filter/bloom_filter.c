@@ -116,7 +116,7 @@ void bloom_printStats(struct BloomFilter *this)
         this->maxElems, this->hashFuncs, this->numSlots, nStar);
 }
 
-void bloom_insert(struct BloomFilter *this, void *elem, size_t size)
+void bloom_insert(struct BloomFilter *this, generic_telem, size_t size)
 {
     for (int i = 0; i < this->hashFuncs; ++i)
     {
@@ -128,7 +128,7 @@ void bloom_insert(struct BloomFilter *this, void *elem, size_t size)
     return;
 }
 
-enum bloomResponse bloom_contains(struct BloomFilter *this, void *elem,
+enum bloomResponse bloom_contains(struct BloomFilter *this, generic_telem,
                                   size_t size)
 {
     for (int i = 0; i < this->hashFuncs; ++i)

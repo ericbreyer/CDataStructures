@@ -1,6 +1,7 @@
 #pragma once
 #include "../linked_list/linked_list.h"
 #include "../IMap.h"
+#include "../generic.h"
 #include <string.h>
 
 struct IMap * construct_LinkedHashTable();

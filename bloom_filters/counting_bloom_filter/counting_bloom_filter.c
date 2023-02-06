@@ -136,7 +136,7 @@ void countingBloom_printStats(struct CountingBloomFilter *this)
         this->maxElems, this->hashFuncs, this->numSlots, nStar);
 }
 
-int countingBloom_insert(struct CountingBloomFilter *this, void *elem,
+int countingBloom_insert(struct CountingBloomFilter *this, generic_telem,
                          size_t size)
 {
     for (int i = 0; i < this->hashFuncs; ++i)
@@ -160,7 +160,7 @@ int countingBloom_insert(struct CountingBloomFilter *this, void *elem,
     }
     return 0;
 }
-int countingBloom_remove(struct CountingBloomFilter *this, void *elem,
+int countingBloom_remove(struct CountingBloomFilter *this, generic_telem,
                          size_t size)
 {
     for (int i = 0; i < this->hashFuncs; ++i)
@@ -185,7 +185,7 @@ int countingBloom_remove(struct CountingBloomFilter *this, void *elem,
     return 0;
 }
 enum bloomResponse countingBloom_contains(struct CountingBloomFilter *this,
-                                          void *elem, size_t size)
+                                          generic_telem, size_t size)
 {
     for (int i = 0; i < this->hashFuncs; ++i)
     {

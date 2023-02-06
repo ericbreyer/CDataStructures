@@ -1,10 +1,9 @@
 #include "./rbnode.h"
 
-#include "../../EBdefs.h"
 
 void rbnode_static_doubleBlackFixup(struct rbnode *dbnode, struct rbnode *parent);
 
-int rbnode_compare(struct rbnode *this, void * other) {
+int rbnode_compare(struct rbnode *this, generic_t other) {
     return this->key - other;
 }
 
@@ -20,10 +19,10 @@ void rbnode_commitApoptosis(struct rbnode *this, struct rbnode **parentsChild) {
         }
         this->key = cur->key;
         if (prev->r == cur) {
-            // prev->r = nullptr;
+            // prev->r = NULL;
             cur->vtable->commitApoptosis(cur, &(prev->r));
         } else {
-            // prev->l = nullptr;
+            // prev->l = NULL;
             cur->vtable->commitApoptosis(cur, &(prev->l));
         }
         return;
@@ -53,14 +52,14 @@ void rbnode_commitApoptosis(struct rbnode *this, struct rbnode **parentsChild) {
     }
     // if it is a leaf, just fixup if need be
     else {
-        *parentsChild = nullptr;
+        *parentsChild = NULL;
         if (this->c == black) {
-            rbnode_static_doubleBlackFixup(nullptr, this->p);
+            rbnode_static_doubleBlackFixup(NULL, this->p);
         }
     }
     // clear the pointers so it dosen't think it has children when it destructs
-    this->l = nullptr;
-    this->r = nullptr;
+    this->l = NULL;
+    this->r = NULL;
     // destruct
     destroy_rbnode(this);
     free(this);
@@ -68,9 +67,9 @@ void rbnode_commitApoptosis(struct rbnode *this, struct rbnode **parentsChild) {
 
 struct rbnode *rbnode_getUncle(struct rbnode *this) {
     if (!this->p->p)
-        return nullptr;
+        return NULL;
     int leftBranch = this->p == this->p->p->l;
-    return leftBranch ? (this->p->p->r ? this->p->p->r : nullptr) : (this->p->p->l ? this->p->p->l : nullptr);
+    return leftBranch ? (this->p->p->r ? this->p->p->r : NULL) : (this->p->p->l ? this->p->p->l : NULL);
 }
 
 struct insertFixupInfo rbnode_getInsertCase(struct rbnode *this) {
@@ -185,23 +184,23 @@ int rbnode_static_isRed(struct rbnode *n) {
 
 struct rbnode *rbnode_static_getSibling(struct rbnode *dbnode, struct rbnode *parent) {
     if (!parent)
-        return nullptr;
+        return NULL;
     int left = dbnode == parent->l;
-    return left ? (parent->r ? parent->r : nullptr) : (parent->l ? parent->l : nullptr);
+    return left ? (parent->r ? parent->r : NULL) : (parent->l ? parent->l : NULL);
 }
 
 struct rbnode *rbnode_static_getSiblingFarChild(struct rbnode *dbnode, struct rbnode *parent) {
     if (!parent)
-        return nullptr;
+        return NULL;
     int left = dbnode == parent->l;
-    return left ? (parent->r ? parent->r->r : nullptr) : (parent->l ? parent->l->l : nullptr);
+    return left ? (parent->r ? parent->r->r : NULL) : (parent->l ? parent->l->l : NULL);
 }
 
 struct rbnode *rbnode_static_getSiblingNearChild(struct rbnode *dbnode, struct rbnode *parent) {
     if (!parent)
-        return nullptr;
+        return NULL;
     int left = dbnode == parent->l;
-    return left ? (parent->r ? parent->r->l : nullptr) : (parent->l ? parent->l->r : nullptr);
+    return left ? (parent->r ? parent->r->l : NULL) : (parent->l ? parent->l->r : NULL);
 }
 
 void rbnode_static_doubleBlackFixup(struct rbnode *dbnode, struct rbnode *parent) {
@@ -246,7 +245,7 @@ void rbnode_setRoot(struct rbnode *this, struct rbnode *root) {
     *(this->root) = root;
 }
 
-void rbnode_printTree(struct rbnode *this, int depth, FILE * out, void (*printKey)(void * thing,FILE * out),void (*printVal)(void * thing,FILE * out)) {
+void rbnode_printTree(struct rbnode *this, int depth, FILE * out, void (*printKey)(generic_t thing,FILE * out),void (*printVal)(generic_t thing,FILE * out)) {
     fprintf(out, " ");
     for (int i = 0; i < depth; i++) {
         fprintf(out, "│ ");
@@ -273,12 +272,12 @@ void rbnode_printTree(struct rbnode *this, int depth, FILE * out, void (*printKe
         this->l->vtable->printTree(this->l, depth + 1, out, printKey, printVal);
 }
 
-int rbnode_getKeys(struct rbnode *this, void * **keys) {
+int rbnode_getKeys(struct rbnode *this, generic_t **keys) {
 
     int numRKeys = 0;
     int numLKeys = 0;
-    void * *rkeys = nullptr;
-    void * *lkeys = nullptr;
+    generic_t *rkeys = NULL;
+    generic_t *lkeys = NULL;
 
     if (this->r) {
         numRKeys = this->r->vtable->getKeys(this->r, &rkeys);
@@ -287,7 +286,7 @@ int rbnode_getKeys(struct rbnode *this, void * **keys) {
         numLKeys = this->l->vtable->getKeys(this->l, &lkeys);
     }
 
-    *keys = calloc((numRKeys + numLKeys + 1), sizeof(void *));
+    *keys = calloc((numRKeys + numLKeys + 1), sizeof(generic_t));
     if (!(*keys)) {
         assert(false);
     }
@@ -310,15 +309,15 @@ struct rbnode *rbnode_copy(struct rbnode *this, struct rbnode *parent) {
     assert(newme);
     newme->c = this->c;
     // copy its subtrees, if they exist
-    struct rbnode *newl = this->l ? this->l->vtable->copy(this->l, newme) : nullptr;
-    struct rbnode *newr = this->r ? this->r->vtable->copy(this->r, newme) : nullptr;
+    struct rbnode *newl = this->l ? this->l->vtable->copy(this->l, newme) : NULL;
+    struct rbnode *newr = this->r ? this->r->vtable->copy(this->r, newme) : NULL;
     // update the pointers
     newme->l = newl;
     newme->r = newr;
     return newme;
 }
 
-int rbnode_contains(struct rbnode *this, void * key) {
+int rbnode_contains(struct rbnode *this, generic_t key) {
     // if this is the node we are looking for, it is
     if (this->key == key) {
         return true;
@@ -333,7 +332,7 @@ int rbnode_contains(struct rbnode *this, void * key) {
     return (*recurseOn)->vtable->contains((*recurseOn), key);
 }
 
-int rbnode_getValue(struct rbnode *this, void * key) {
+int rbnode_getValue(struct rbnode *this, generic_t key) {
     // if this is the node we are looking for, get it
     if (this->key == key) {
         return this->value;
@@ -348,7 +347,7 @@ int rbnode_getValue(struct rbnode *this, void * key) {
     return (*recurseOn)->vtable->getValue((*recurseOn), key);
 }
 
-int rbnode_tryGetValue(struct rbnode *this, void * key, void * *out) {
+int rbnode_tryGetValue(struct rbnode *this, generic_t key, generic_t *out) {
     // if this is the node we are looking for, get it
     if (this->key == key) {
         *out = this->value;
@@ -364,7 +363,7 @@ int rbnode_tryGetValue(struct rbnode *this, void * key, void * *out) {
     return (*recurseOn)->vtable->tryGetValue((*recurseOn), key, out);
 }
 
-int rbnode_setValue(struct rbnode *this, void * key, void * value) {
+int rbnode_setValue(struct rbnode *this, generic_t key, generic_t value) {
     // if this is the node we are looking for, update it
     if (this->key == key) {
         this->value = value;
@@ -380,7 +379,7 @@ int rbnode_setValue(struct rbnode *this, void * key, void * value) {
     return (*recurseOn)->vtable->setValue((*recurseOn), key, value);
 }
 
-int rbnode_insert(struct rbnode *this, void * key, void * value) {
+int rbnode_insert(struct rbnode *this, generic_t key, generic_t value) {
     // if we are they key, it is already in the tree
     if (this->vtable->compare(this, key) == 0)
         return false;
@@ -398,7 +397,7 @@ int rbnode_insert(struct rbnode *this, void * key, void * value) {
     }
 }
 
-int rbnode_remove(struct rbnode *this, void * key, struct rbnode **parentsChild) {
+int rbnode_remove(struct rbnode *this, generic_t key, struct rbnode **parentsChild) {
     // if this is the node we are looking for, delete
     if (this->key == key) {
         this->vtable->commitApoptosis(this, parentsChild);
@@ -482,10 +481,10 @@ struct rbnode_VTABLE_s rbnode_VTABLE = {
     .rp = rbnode_rp,
 };
 
-struct rbnode *construct_rbnode(void * key, void * value, struct rbnode *parent, struct rbnode **r) {
+struct rbnode *construct_rbnode(generic_t key, generic_t value, struct rbnode *parent, struct rbnode **r) {
     struct rbnode *node = calloc(1, sizeof *node);
-    node->l = nullptr;
-    node->r = nullptr;
+    node->l = NULL;
+    node->r = NULL;
 
     node->root = r;
     node->p = parent;

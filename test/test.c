@@ -2,11 +2,12 @@
 #include "../linked_list/linked_list.h"
 #include "../linked_list/linked_list_node/linked_list_node.h"
 #include "../rbtree/rbtree.h"
+#include "../generic.h"
 // #include "../bloom/bloom.h"
 #include "ref.h"
 #include <sys/resource.h>
 
-void printInt(void *thing, FILE *out) {
+void printInt(generic_t thing, FILE *out) {
     fprintf(out, "%d", thing);
 }
 
@@ -15,7 +16,7 @@ void rbtree_test_getKeys() {
     for (int i = 0; i < 50; ++i) {
         map->insert(map, i, i);
     }
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {15, 23, 31, 39, 43, 45, 47, 48, 49, 46, 44, 41, 42, 40, 35, 37, 38, 36, 33, 34, 32, 27, 29, 30, 28, 25, 26, 24, 19, 21, 22, 20, 17, 18, 16, 7, 11, 13, 14, 12, 9, 10, 8, 3, 5, 6, 4, 1, 2, 0};
     int numKeys = map->getKeys(map, &actual);
 
@@ -61,7 +62,7 @@ void rbtree_test_copy() {
         map->insert(map, i, i);
     }
     struct IMap *test = map->copy(map);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {15, 23, 31, 39, 43, 45, 47, 48, 49, 46, 44, 41, 42, 40, 35, 37, 38, 36, 33, 34, 32, 27, 29, 30, 28, 25, 26, 24, 19, 21, 22, 20, 17, 18, 16, 7, 11, 13, 14, 12, 9, 10, 8, 3, 5, 6, 4, 1, 2, 0};
     int numKeys = test->getKeys(test, &actual);
 
@@ -233,7 +234,7 @@ void llist_test_copy() {
         list->append(list, i);
     }
     list = list->copy(list);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -253,7 +254,7 @@ void llist_test_toArray() {
     for (int i = 0; i < 10; ++i) {
         list->append(list, i);
     }
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -388,7 +389,7 @@ void llist_test_append() {
         list->append(list, i);
     }
     list->append(list, 10);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -412,7 +413,7 @@ void llist_test_prepend() {
         list->append(list, i);
     }
     list->prepend(list, 10);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {10, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -436,7 +437,7 @@ void llist_test_insert() {
         list->append(list, i);
     }
     list->insert(list, 5, 10);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 1, 2, 3, 4, 10, 5, 6, 7, 8, 9};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -460,7 +461,7 @@ void llist_test_remove() {
         list->append(list, i);
     }
     list->remove(list, 5);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 1, 2, 3, 4, 6, 7, 8, 9};
     list->toArray(list, &actual);
     for (int i = 0; i < list->length(list); ++i) {
@@ -488,7 +489,7 @@ void llist_test_sort() {
         list->append(list, i);
     }
     list->sort(list);
-    void **actual;
+    generic_t *actual;
 
     list->toArray(list, &actual);
 
@@ -496,7 +497,7 @@ void llist_test_sort() {
     for (int i = 0; i < 100; ++i) {
         ref->append(ref, i);
     }
-    void **expected;
+    generic_t *expected;
     ref->toArray(ref, &expected);
 
     for (int i = 0; i < list->length(list); ++i) {
@@ -523,7 +524,7 @@ void LinkedHashTable_test_getKeys() {
     for (int i = 0; i < 50; ++i) {
         map->insert(map, i, i);
     }
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 43, 45, 5, 21, 7, 10, 26, 42, 14, 33, 6, 20, 32, 38, 8, 49, 1, 31, 36, 40, 39, 41, 11, 22, 47, 13, 48, 17, 34, 24, 4, 19, 30, 46, 9, 12, 18, 25, 3, 15, 27, 28, 2, 23, 35, 37, 44, 29, 16};
     int numKeys = map->getKeys(map, &actual);
 
@@ -549,7 +550,7 @@ void LinkedHashTable_test_clear() {
     }
 
     test->clear(test);
-    void **dummy = NULL;
+    generic_t *dummy = NULL;
     int numKeys = test->getKeys(test, &dummy);
 
     if (numKeys) {
@@ -569,7 +570,7 @@ void LinkedHashTable_test_copy() {
         map->insert(map, i, i);
     }
     struct IMap *test = map->copy(map);
-    void **actual = NULL;
+    generic_t *actual = NULL;
     int expected[] = {0, 43, 45, 5, 21, 7, 10, 26, 42, 14, 33, 6, 20, 32, 38, 8, 49, 1, 31, 36, 40, 39, 41, 11, 22, 47, 13, 48, 17, 34, 24, 4, 19, 30, 46, 9, 12, 18, 25, 3, 15, 27, 28, 2, 23, 35, 37, 44, 29, 16};
     int numKeys = test->getKeys(test, &actual);
 

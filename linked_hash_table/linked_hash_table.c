@@ -52,14 +52,14 @@ void LinkedHashTable_resize(struct LinkedHashTable * this, float factor) {
     free(oldUnderlyingArray);
 }
 
-void LinkedHashTable_print(struct IMap * mapThis, FILE * out,void (*printKey)(void * thing,FILE * out),void (*printVal)(void * thing,FILE * out)) {
+void LinkedHashTable_print(struct IMap * mapThis, FILE * out,void (*printKey)(generic_t thing,FILE * out),void (*printVal)(generic_t thing,FILE * out)) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
     fprintf(out, "{");
     for (int i = 0; i < this->numSlots; i++) {
-        void **keys = malloc(sizeof(void *) * this->numKeys);
+        generic_t*keys = malloc(sizeof(generic_t) * this->numKeys);
         int len = ChainingList_keys(this->underlyingArray[i], keys);
         for(int j = 0; j < len; ++j) {
-            void * val;
+            generic_t val;
             ChainingList_tryGet(this->underlyingArray[i], keys[j], &val);
             printKey(keys[j], out);
             fprintf(out, ": ");
@@ -70,7 +70,7 @@ void LinkedHashTable_print(struct IMap * mapThis, FILE * out,void (*printKey)(vo
     fprintf(out, "}\n");
 }
 
-int LinkedHashTable_getKeys(struct IMap * mapThis, void ***keys) {
+int LinkedHashTable_getKeys(struct IMap * mapThis, generic_t**keys) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
     (*keys) = malloc(this->numKeys * sizeof(void*));
@@ -94,7 +94,7 @@ struct IMap * LinkedHashTable_copy(struct IMap * mapThis) {
 
     struct IMap * newTable = construct_LinkedHashTable(this->numSlots);
 
-    void **keys = NULL;
+    generic_t*keys = NULL;
     int numKeys = mapThis->getKeys(mapThis, &keys);
 
 
@@ -105,38 +105,38 @@ struct IMap * LinkedHashTable_copy(struct IMap * mapThis) {
     return newTable;
 }
 
-bool LinkedHashTable_contains(struct IMap * mapThis, void * key) {
+bool LinkedHashTable_contains(struct IMap * mapThis, generic_t key) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
-    void * temp;
+    generic_t temp;
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;
     return ChainingList_tryGet(this->underlyingArray[slot],key, &temp);
 }
 
-void * LinkedHashTable_getValue(struct IMap * mapThis, void * key) {
+generic_t LinkedHashTable_getValue(struct IMap * mapThis, generic_t key) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
-    void * out;
+    generic_t out;
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;
     ChainingList_tryGet(this->underlyingArray[slot], key, &out);
     return out;
 }
 
-bool LinkedHashTable_tryGetValue(struct IMap * mapThis, void * key, void **out) {
+bool LinkedHashTable_tryGetValue(struct IMap * mapThis, generic_t key, generic_t*out) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;
     return ChainingList_tryGet(this->underlyingArray[slot], key, out);
 }
 
-bool LinkedHashTable_setValue(struct IMap * mapThis, void * key, void * value) {
+bool LinkedHashTable_setValue(struct IMap * mapThis, generic_t key, generic_t value) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;
     return ChainingList_setValue(this->underlyingArray[slot], key, value);
 }
 
-bool LinkedHashTable_insert(struct IMap * mapThis, void * key, void * value) {
+bool LinkedHashTable_insert(struct IMap * mapThis, generic_t key, generic_t value) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;
     bool ret = ChainingList_insert(this->underlyingArray[slot], key, value);
@@ -149,7 +149,7 @@ bool LinkedHashTable_insert(struct IMap * mapThis, void * key, void * value) {
     return ret;
 }
 
-bool LinkedHashTable_remove(struct IMap * mapThis, void * key) {
+bool LinkedHashTable_remove(struct IMap * mapThis, generic_t key) {
     struct LinkedHashTable * this = (struct LinkedHashTable *)mapThis;
 
     int slot = LinkedHashTable_hash(this, key) % this->numSlots;

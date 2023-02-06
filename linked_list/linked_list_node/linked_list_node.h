@@ -1,3 +1,4 @@
+#include "../../generic.h"
 /**
  * @brief a class that represents a linked list node
  */
@@ -13,6 +14,6 @@ struct linked_list_node {
     /**
      * @brief the value stored in this node
      */
-    void * value;
+    generic_t value;
 
 };

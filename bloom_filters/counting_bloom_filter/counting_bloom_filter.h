@@ -50,7 +50,7 @@ void countingBloom_printStats(struct CountingBloomFilter *this);
  * @return 0 if the insert was successful
  * @return non-zero if the insert was unsuccessful (a counter overflowed)
  */
-int countingBloom_insert(struct CountingBloomFilter *this, void *elem,
+int countingBloom_insert(struct CountingBloomFilter *this, generic_telem,
                          size_t size);
 
 /**
@@ -63,7 +63,7 @@ int countingBloom_insert(struct CountingBloomFilter *this, void *elem,
  * @return 0 if the remove was successful
  * @return non-zero if the remove was unsuccessful (a counter underflowed)
  */
-int countingBloom_remove(struct CountingBloomFilter *this, void *elem,
+int countingBloom_remove(struct CountingBloomFilter *this, generic_telem,
                          size_t size);
 
 /**
@@ -76,7 +76,7 @@ int countingBloom_remove(struct CountingBloomFilter *this, void *elem,
  * @return item is DEFINITELY_NOT_PRESENT or PROBABLY_PRESENT
  */
 enum bloomResponse countingBloom_contains(struct CountingBloomFilter *this,
-                                          void *elem, size_t size);
+                                          generic_telem, size_t size);
 
 /**
  * @brief Deletes an instance of a CountingBloomFilter

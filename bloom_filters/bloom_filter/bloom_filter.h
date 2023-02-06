@@ -48,7 +48,7 @@ void bloom_printStats(struct BloomFilter *this);
  * @param[in] elem the pointer to the element to insert
  * @param[in] size the size of said elements in bytes
  */
-void bloom_insert(struct BloomFilter *this, void *elem, size_t size);
+void bloom_insert(struct BloomFilter *this, generic_telem, size_t size);
 
 /**
  * @brief Querys the filter for item membership an item into the filter.
@@ -59,7 +59,7 @@ void bloom_insert(struct BloomFilter *this, void *elem, size_t size);
  *
  * @return item is DEFINITELY_NOT_PRESENT or PROBABLY_PRESENT
  */
-enum bloomResponse bloom_contains(struct BloomFilter *this, void *elem,
+enum bloomResponse bloom_contains(struct BloomFilter *this, generic_telem,
                                   size_t size);
 
 /**
