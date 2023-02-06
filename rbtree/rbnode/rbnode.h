@@ -55,11 +55,11 @@ struct rbnode {
     /**
      * @brief the key of this node
      */
-    int key;
+    void * key;
     /**
      * @brief the value stored in this node
      */
-    int value;
+    void * value;
 
     struct rbnode_VTABLE_s *vtable;
 };
@@ -72,11 +72,11 @@ struct rbnode_VTABLE_s {
      * @param[in] other an object of type K to compare
      * @return int 0 if equal, positive if this is greater, negative if other is greater
      */
-    int (*compare)(struct rbnode *this, int other);
+    int (*compare)(struct rbnode *this, void * other);
     /**
      * @brief delete this node from the tree, fixing pointers accordingly
      *
-     * @param[in] parentsChilda pointer to the pointer the parent holds of the node to delete (used to update the parent's child pointer easily)
+     * @param[in] parentsChild pointer to the pointer the parent holds of the node to delete (used to update the parent's child pointer easily)
      */
     void (*commitApoptosis)(struct rbnode *this, struct rbnode **parentsChild);
     /**
@@ -153,12 +153,6 @@ struct rbnode_VTABLE_s {
      */
     void (*static_doubleBlackFixup)(struct rbnode *dbnode, struct rbnode *parent);
     /**
-     * @brief a string representation of this (singular) node
-     *
-     * @return string representation
-     */
-    char *(*toString)(struct rbnode *this);
-    /**
      * @brief update the root reference of the tree object
      * @param[in] root a pointer to the new root
      */
@@ -178,9 +172,9 @@ struct rbnode_VTABLE_s {
      *
      * @param[in] depth the depth of this node
      */
-    void (*printTree)(struct rbnode *this, int depth, FILE * out);
+    void (*printTree)(struct rbnode *this, int depth, FILE * out, void (*printKey)(void * thing,FILE * out),void (*printVal)(void * thing,FILE * out));
 
-    int (*getKeys)(struct rbnode *this, int **keys);
+    int (*getKeys)(struct rbnode *this, void ***keys);
     /**
      * @brief makes a copy of the tree rooted at this node
      *
@@ -195,7 +189,7 @@ struct rbnode_VTABLE_s {
      * @return true if the key is in this tree
      * @return false otherwise
      */
-    int (*contains)(struct rbnode *this, int key);
+    int (*contains)(struct rbnode *this, void * key);
     /**
      * @brief get the value of the node with the key in the tree rooted at this node
      *
@@ -204,7 +198,7 @@ struct rbnode_VTABLE_s {
      * @param[in] key the key to look for
      * @return V the value of the key if it exists in the tree, undefined value otherwise
      */
-    int (*getValue)(struct rbnode *this, int key);
+    int (*getValue)(struct rbnode *this, void * key);
     /**
      * @brief gets the key's value if it is in the tree rooted at this node
      *
@@ -213,7 +207,7 @@ struct rbnode_VTABLE_s {
      * @return true if the key is in this tree
      * @return false otherwise
      */
-    int (*tryGetValue)(struct rbnode *this, int key, int *out);
+    int (*tryGetValue)(struct rbnode *this, void * key, void * *out);
     /**
      * @brief set the value of a node with corrsponding key in the tree rooted at this node
      *
@@ -222,7 +216,7 @@ struct rbnode_VTABLE_s {
      * @return true if the node was in the tree and set
      * @return false otherwise
      */
-    int (*setValue)(struct rbnode *this, int key, int value);
+    int (*setValue)(struct rbnode *this, void * key, void * value);
     /**
      * @brief insert a key value pair into the tree rooted at this node
      *
@@ -231,7 +225,7 @@ struct rbnode_VTABLE_s {
      * @return true if the node wasn't in the subtree and thus inserted
      * @return false otherwise
      */
-    int (*insert)(struct rbnode *this, int key, int value);
+    int (*insert)(struct rbnode *this, void * key, void * value);
     /**
      * @brief remove a node with a key from the tree rooted at this node
      *
@@ -240,7 +234,7 @@ struct rbnode_VTABLE_s {
      * @return true if the node was in the subtree and deleted
      * @return false otherwise
      */
-    int (*remove)(struct rbnode *this, int key, struct rbnode **parentsChild);
+    int (*remove)(struct rbnode *this, void * key, struct rbnode **parentsChild);
     /**
      * @brief get the black height of the tree rooted at this node
      *
@@ -258,4 +252,4 @@ struct rbnode_VTABLE_s {
 };
 
 void destroy_rbnode(struct rbnode *this);
-struct rbnode *construct_rbnode(int key, int value, struct rbnode *parent, struct rbnode **r);
+struct rbnode *construct_rbnode(void * key, void * value, struct rbnode *parent, struct rbnode **r);

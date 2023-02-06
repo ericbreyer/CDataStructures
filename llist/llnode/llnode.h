@@ -13,6 +13,6 @@ struct llnode {
     /**
      * @brief the value stored in this node
      */
-    int value;
+    void * value;
 
 };

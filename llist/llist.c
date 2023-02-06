@@ -2,14 +2,15 @@
 #include "../EBdefs.h"
 #include "./llnode/llnode.h"
 
-void llist_print(struct llist *this, FILE * out) {
+void llist_print(struct llist *this, FILE * out, void(*printThing)(void*thing, FILE * out)) {
     if(!this->head) {
         fprintf(out, "[]");
     }
     fprintf(out, "[");
     struct llnode * cur = this->head;
     for(; cur; cur = cur->next) {
-        fprintf(out, "%d, ", cur->value);
+        printThing(cur->value, out);
+        fprintf(out, ", ");
     }
     fprintf(out, "\b\b]");
 }
@@ -24,7 +25,7 @@ int llist_length(struct llist *this) {
     return len;
 }
 
-int llist_toArray(struct llist *this, int **values) {
+int llist_toArray(struct llist *this, void ***values) {
     if(!this->head) {
         return 0;
     }
@@ -52,7 +53,7 @@ void llist_clear(struct llist *this) {
     this->last = NULL;
 }
 
-bool llist_contains(struct llist *this, int value) {
+bool llist_contains(struct llist *this, void * value) {
     if(!this->head) {
         return 0;
     }
@@ -66,7 +67,7 @@ bool llist_contains(struct llist *this, int value) {
     return false;
 }
 
-int llist_find(struct llist *this, int value) {
+int llist_find(struct llist *this, void * value) {
     if(!this->head) {
         return NOT_FOUND;
     }
@@ -80,7 +81,7 @@ int llist_find(struct llist *this, int value) {
     return NOT_FOUND;
  }
 
-int llist_get(struct llist *this, int index) {
+void * llist_get(struct llist *this, int index) {
     if(!this->head) {
         return 0;
     }
@@ -91,7 +92,7 @@ int llist_get(struct llist *this, int index) {
     return cur->value;
 }
 
-void llist_set(struct llist *this, int index, int value) {
+void llist_set(struct llist *this, int index, void * value) {
     if(!this->head) {
         return;
     }
@@ -101,7 +102,7 @@ void llist_set(struct llist *this, int index, int value) {
     }
     cur->value = value;
 }
-void llist_append(struct llist *this, int value) {
+void llist_append(struct llist *this, void * value) {
     if(!this->last) {
         struct llnode * new = malloc(sizeof *new);
         new->next = new->prev = NULL;
@@ -120,7 +121,7 @@ void llist_append(struct llist *this, int value) {
     this->last->next = new;
     this->last = new;
 }
-void llist_prepend(struct llist *this, int value) {
+void llist_prepend(struct llist *this, void * value) {
     if(!this->head) {
         struct llnode * new = malloc(sizeof *new);
         new->next = new->prev = NULL;
@@ -139,7 +140,7 @@ void llist_prepend(struct llist *this, int value) {
     this->head = new;
 }
 
-void llist_insert(struct llist *this, int index, int value) {
+void llist_insert(struct llist *this, int index, void * value) {
     if(!this->head) {
         return;
     }
